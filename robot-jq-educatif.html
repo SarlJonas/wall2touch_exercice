@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot JQ - Assistant Éducatif CE2 | Sarl Jonas Browser High-Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-cyan: #00f5ff;
+            --primary-magenta: #ff00ff;
+            --primary-yellow: #ffff00;
+            --accent-green: #00ff88;
+            --accent-orange: #ff8800;
+            --accent-purple: #8800ff;
+            --dark-bg: #0a0a1a;
+            --dark-card: #12122a;
+            --dark-surface: #1a1a3a;
+            --glow-cyan: 0 0 20px rgba(0, 245, 255, 0.5), 0 0 40px rgba(0, 245, 255, 0.3);
+            --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: var(--dark-bg);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(136, 0, 255, 0.05) 0%, transparent 50%);
+            animation: bgRotate 30s linear infinite;
+        }
+
+        @keyframes bgRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .particle:nth-child(2n) { background: var(--primary-magenta); box-shadow: var(--glow-magenta); }
+        .particle:nth-child(3n) { background: var(--accent-green); box-shadow: var(--glow-green); }
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 14s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 16s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 13s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 15s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 11s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 17s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 1.5s; animation-duration: 14s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 4.5s; animation-duration: 12s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            background: linear-gradient(180deg, rgba(10, 10, 26, 0.95) 0%, rgba(10, 10, 26, 0.8) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-magenta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            box-shadow: var(--glow-cyan);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        /* Remplacez .logo-placeholder par cette image: */
+        /* <img src="votre-logo.png" alt="Logo JB" class="logo-img"> */
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            box-shadow: var(--glow-cyan);
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { box-shadow: var(--glow-cyan); }
+            50% { box-shadow: var(--glow-magenta); }
+        }
+
+        .company-name {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .company-name h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .company-name p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta));
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover { color: var(--primary-cyan); }
+        nav a:hover::after { width: 100%; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h2 span {
+            display: block;
+        }
+
+        .hero-text h2 span:nth-child(1) {
+            color: var(--primary-cyan);
+            text-shadow: var(--glow-cyan);
+        }
+
+        .hero-text h2 span:nth-child(2) {
+            background: linear-gradient(90deg, var(--primary-magenta), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text h2 span:nth-child(3) {
+            color: var(--accent-green);
+            text-shadow: var(--glow-green);
+            font-size: 3rem;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--accent-green));
+            color: var(--dark-bg);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.6), 0 0 60px rgba(0, 245, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-magenta);
+            border: 2px solid var(--primary-magenta);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-magenta);
+            color: var(--dark-bg);
+            box-shadow: var(--glow-magenta);
+            transform: translateY(-3px);
+        }
+
+        /* Robot Display */
+        .robot-display {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .robot-container {
+            position: relative;
+            width: 400px;
+            height: 500px;
+        }
+
+        .robot-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 245, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: robotGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes robotGlow {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .robot-placeholder {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, var(--dark-card) 0%, var(--dark-surface) 100%);
+            border-radius: 30px;
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            overflow: hidden;
+        }
+
+        /* Remplacez .robot-svg par votre vidéo/image: */
+        /* <video src="robot_jq.mp4" autoplay loop muted class="robot-video"></video> */
+        /* ou <img src="robot_jq.png" alt="Robot JQ" class="robot-img"> */
+        .robot-video, .robot-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 28px;
+        }
+
+        .robot-svg {
+            width: 250px;
+            height: 300px;
+            animation: robotFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .robot-eyes {
+            fill: var(--primary-cyan);
+            animation: eyeBlink 3s ease-in-out infinite;
+        }
+
+        @keyframes eyeBlink {
+            0%, 45%, 55%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .robot-antenna {
+            animation: antennaPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes antennaPulse {
+            0%, 100% { fill: var(--primary-cyan); }
+            50% { fill: var(--primary-magenta); }
+        }
+
+        .robot-label {
+            position: absolute;
+            bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            text-shadow: var(--glow-cyan);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 40px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 245, 255, 0.02) 50%, transparent 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2rem;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--dark-card) 0%, var(--dark-surface) 100%);
+            border-radius: 25px;
+            padding: 40px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 245, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(0, 245, 255, 0.05));
+            color: var(--primary-cyan);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(255, 0, 255, 0.05));
+            color: var(--primary-magenta);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.05));
+            color: var(--accent-green);
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            background: linear-gradient(135deg, rgba(255, 136, 0, 0.2), rgba(255, 136, 0, 0.05));
+            color: var(--accent-orange);
+        }
+
+        .feature-card:nth-child(5) .feature-icon {
+            background: linear-gradient(135deg, rgba(136, 0, 255, 0.2), rgba(136, 0, 255, 0.05));
+            color: var(--accent-purple);
+        }
+
+        .feature-card:nth-child(6) .feature-icon {
+            background: linear-gradient(135deg, rgba(255, 255, 0, 0.2), rgba(255, 255, 0, 0.05));
+            color: var(--primary-yellow);
+        }
+
+        .feature-card h4 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Exercises Section */
+        .exercises {
+            padding: 100px 40px;
+        }
+
+        .exercises-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .exercise-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            background: var(--dark-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary-cyan);
+            color: var(--primary-cyan);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--accent-green));
+            color: var(--dark-bg);
+            border-color: transparent;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .exercise-content {
+            background: var(--dark-card);
+            border-radius: 30px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .exercise-panel {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .exercise-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .math-problem {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .problem-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .answer-input {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .answer-input input {
+            width: 150px;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            background: var(--dark-surface);
+            color: #ffffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .check-btn {
+            padding: 20px 40px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-cyan));
+            border: none;
+            color: var(--dark-bg);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow-green);
+        }
+
+        .feedback {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .feedback.correct {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+            border: 2px solid var(--accent-green);
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 0, 100, 0.2);
+            color: #ff6464;
+            border: 2px solid #ff6464;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .score-item:nth-child(1) .value { color: var(--accent-green); }
+        .score-item:nth-child(2) .value { color: #ff6464; }
+        .score-item:nth-child(3) .value { color: var(--primary-cyan); }
+
+        .score-item .label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 40px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 0, 255, 0.02) 50%, transparent 100%);
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .contact-card {
+            background: var(--dark-card);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            border-color: var(--primary-magenta);
+            transform: translateY(-5px);
+        }
+
+        .contact-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-card h5 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-cyan);
+        }
+
+        .contact-card p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .contact-form {
+            background: var(--dark-card);
+            border-radius: 30px;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 18px 25px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: var(--dark-surface);
+            color: #ffffff;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-magenta);
+            box-shadow: var(--glow-magenta);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary-magenta), var(--accent-purple));
+            border: none;
+            color: #ffffff;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow-magenta);
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px 40px;
+            background: var(--dark-card);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-logo .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+        }
+
+        .footer-text h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary-cyan);
+        }
+
+        .footer-text p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .footer-copy {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text h2 {
+                font-size: 3rem;
+            }
+
+            .hero-text h2 span:nth-child(3) {
+                font-size: 2.2rem;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+
+            .robot-container {
+                width: 300px;
+                height: 380px;
+            }
+
+            nav {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-text h2 {
+                font-size: 2.2rem;
+            }
+
+            .hero-text h2 span:nth-child(3) {
+                font-size: 1.6rem;
+            }
+
+            .section-title h3 {
+                font-size: 2rem;
+            }
+
+            .problem-display {
+                font-size: 2.5rem;
+            }
+
+            .answer-input {
+                flex-direction: column;
+            }
+
+            .exercise-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <!-- REMPLACEZ PAR VOTRE LOGO: <img src="logo_jb.png" alt="Logo JB" class="logo-img"> -->
+                <div class="logo-placeholder">JB</div>
+                <div class="company-name">
+                    <h1>Jonas Browser</h1>
+                    <p>HIGH-TECH SOLUTIONS</p>
+                </div>
+            </div>
+            <nav>
+                <a href="#accueil">Accueil</a>
+                <a href="#fonctionnalites">Fonctionnalités</a>
+                <a href="#exercices">Exercices</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>
+                    <span>Robot JQ</span>
+                    <span>Assistant Éducatif</span>
+                    <span>🚀 Spécial CE2</span>
+                </h2>
+                <p>
+                    Découvrez une nouvelle façon d'apprendre avec Robot JQ ! 
+                    Intelligence artificielle, détection gestuelle et exercices 
+                    interactifs pour rendre les mathématiques amusantes. 
+                    Une technologie futuriste au service de l'éducation.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#exercices" class="btn btn-primary">
+                        🎮 Commencer les exercices
+                    </a>
+                    <a href="#fonctionnalites" class="btn btn-secondary">
+                        ✨ Découvrir les fonctionnalités
+                    </a>
+                </div>
+            </div>
+            <div class="robot-display">
+                <div class="robot-container">
+                    <div class="robot-glow"></div>
+                    <div class="robot-placeholder">
+                        <!-- REMPLACEZ PAR VOTRE ROBOT: -->
+                        <!-- <video src="robot_jq.mp4" autoplay loop muted playsinline class="robot-video"></video> -->
+                        <!-- ou <img src="robot_jq.png" alt="Robot JQ" class="robot-img"> -->
+                        
+                        <!-- Robot SVG par défaut -->
+                        <svg class="robot-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Antenne -->
+                            <circle class="robot-antenna" cx="100" cy="15" r="10"/>
+                            <rect x="97" y="20" width="6" height="25" fill="#00f5ff"/>
+                            
+                            <!-- Tête -->
+                            <rect x="40" y="45" width="120" height="80" rx="20" fill="#1a1a3a" stroke="#00f5ff" stroke-width="3"/>
+                            
+                            <!-- Yeux -->
+                            <ellipse class="robot-eyes" cx="70" cy="85" rx="15" ry="20"/>
+                            <ellipse class="robot-eyes" cx="130" cy="85" rx="15" ry="20"/>
+                            
+                            <!-- Pupilles -->
+                            <circle cx="70" cy="85" r="8" fill="#0a0a1a">
+                                <animate attributeName="cx" values="70;75;70;65;70" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="130" cy="85" r="8" fill="#0a0a1a">
+                                <animate attributeName="cx" values="130;135;130;125;130" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Bouche -->
+                            <path d="M70 110 Q100 130 130 110" stroke="#ff00ff" stroke-width="4" fill="none"/>
+                            
+                            <!-- Corps -->
+                            <rect x="50" y="130" width="100" height="90" rx="15" fill="#1a1a3a" stroke="#ff00ff" stroke-width="3"/>
+                            
+                            <!-- Détails corps -->
+                            <circle cx="100" cy="160" r="15" fill="none" stroke="#00f5ff" stroke-width="2">
+                                <animate attributeName="r" values="15;18;15" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <rect x="70" y="185" width="60" height="8" rx="4" fill="#00ff88"/>
+                            <rect x="80" y="200" width="40" height="8" rx="4" fill="#ff8800"/>
+                            
+                            <!-- Bras gauche -->
+                            <rect x="25" y="140" width="20" height="60" rx="10" fill="#1a1a3a" stroke="#00f5ff" stroke-width="2">
+                                <animate attributeName="y" values="140;135;140" dur="3s" repeatCount="indefinite"/>
+                            </rect>
+                            
+                            <!-- Bras droit -->
+                            <rect x="155" y="140" width="20" height="60" rx="10" fill="#1a1a3a" stroke="#00f5ff" stroke-width="2">
+                                <animate attributeName="y" values="140;145;140" dur="3s" repeatCount="indefinite"/>
+                            </rect>
+                        </svg>
+                        
+                        <span class="robot-label">ROBOT JQ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="fonctionnalites">
+        <div class="section-title">
+            <h3>🌟 Fonctionnalités Magiques</h3>
+            <p>Tout ce dont votre enfant a besoin pour apprendre en s'amusant</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👋</div>
+                <h4>Détection Gestuelle</h4>
+                <p>Interagissez avec Robot JQ par de simples gestes de la main. Technologie sans contact pour une expérience immersive et hygiénique.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🗣️</div>
+                <h4>Guide Vocal</h4>
+                <p>Robot JQ parle et encourage votre enfant à chaque étape. Des félicitations motivantes et des explications claires.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧮</div>
+                <h4>Exercices CE2</h4>
+                <p>Programme complet de mathématiques adapté au niveau CE2 : additions, soustractions, multiplications et problèmes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h4>Suivi des Progrès</h4>
+                <p>Tableau de bord interactif pour suivre les performances et célébrer chaque victoire de votre enfant.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌈</div>
+                <h4>Interface Ludique</h4>
+                <p>Design coloré et animations captivantes pour maintenir l'attention et rendre l'apprentissage amusant.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h4>100% Sécurisé</h4>
+                <p>Application locale sans connexion internet requise. Vos données restent privées et protégées.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercises Section -->
+    <section class="exercises" id="exercices">
+        <div class="section-title">
+            <h3>🎮 Zone d'Exercices</h3>
+            <p>Choisis ta catégorie et entraîne-toi avec Robot JQ !</p>
+        </div>
+        <div class="exercises-container">
+            <div class="exercise-tabs">
+                <button class="tab-btn active" data-tab="addition">➕ Addition</button>
+                <button class="tab-btn" data-tab="soustraction">➖ Soustraction</button>
+                <button class="tab-btn" data-tab="multiplication">✖️ Multiplication</button>
+                <button class="tab-btn" data-tab="probleme">🧩 Problème</button>
+            </div>
+            <div class="exercise-content">
+                <!-- Addition Panel -->
+                <div class="exercise-panel active" id="addition-panel">
+                    <div class="math-problem">
+                        <div class="problem-display" id="addition-problem">12 + 8 = ?</div>
+                        <div class="answer-input">
+                            <input type="number" id="addition-answer" placeholder="Ta réponse">
+                            <button class="check-btn" onclick="checkAnswer('addition', 20)">Vérifier ✓</button>
+                        </div>
+                        <div class="feedback" id="addition-feedback" style="display: none;"></div>
+                        <div class="score-display">
+                            <div class="score-item">
+                                <div class="value" id="addition-correct">0</div>
+                                <div class="label">Bonnes réponses</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="addition-wrong">0</div>
+                                <div class="label">À revoir</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="addition-streak">0</div>
+                                <div class="label">Série en cours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soustraction Panel -->
+                <div class="exercise-panel" id="soustraction-panel">
+                    <div class="math-problem">
+                        <div class="problem-display" id="soustraction-problem">25 - 7 = ?</div>
+                        <div class="answer-input">
+                            <input type="number" id="soustraction-answer" placeholder="Ta réponse">
+                            <button class="check-btn" onclick="checkAnswer('soustraction', 18)">Vérifier ✓</button>
+                        </div>
+                        <div class="feedback" id="soustraction-feedback" style="display: none;"></div>
+                        <div class="score-display">
+                            <div class="score-item">
+                                <div class="value" id="soustraction-correct">0</div>
+                                <div class="label">Bonnes réponses</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="soustraction-wrong">0</div>
+                                <div class="label">À revoir</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="soustraction-streak">0</div>
+                                <div class="label">Série en cours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multiplication Panel -->
+                <div class="exercise-panel" id="multiplication-panel">
+                    <div class="math-problem">
+                        <div class="problem-display" id="multiplication-problem">6 × 7 = ?</div>
+                        <div class="answer-input">
+                            <input type="number" id="multiplication-answer" placeholder="Ta réponse">
+                            <button class="check-btn" onclick="checkAnswer('multiplication', 42)">Vérifier ✓</button>
+                        </div>
+                        <div class="feedback" id="multiplication-feedback" style="display: none;"></div>
+                        <div class="score-display">
+                            <div class="score-item">
+                                <div class="value" id="multiplication-correct">0</div>
+                                <div class="label">Bonnes réponses</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="multiplication-wrong">0</div>
+                                <div class="label">À revoir</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="multiplication-streak">0</div>
+                                <div class="label">Série en cours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problème Panel -->
+                <div class="exercise-panel" id="probleme-panel">
+                    <div class="math-problem">
+                        <p style="font-size: 1.3rem; margin-bottom: 20px; color: rgba(255,255,255,0.9); line-height: 1.8;">
+                            🍎 Marie a <strong style="color: var(--primary-cyan);">15 pommes</strong>. 
+                            Elle en donne <strong style="color: var(--primary-magenta);">6</strong> à son ami. 
+                            Combien de pommes lui reste-t-il ?
+                        </p>
+                        <div class="problem-display" id="probleme-problem">15 - 6 = ?</div>
+                        <div class="answer-input">
+                            <input type="number" id="probleme-answer" placeholder="Ta réponse">
+                            <button class="check-btn" onclick="checkAnswer('probleme', 9)">Vérifier ✓</button>
+                        </div>
+                        <div class="feedback" id="probleme-feedback" style="display: none;"></div>
+                        <div class="score-display">
+                            <div class="score-item">
+                                <div class="value" id="probleme-correct">0</div>
+                                <div class="label">Bonnes réponses</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="probleme-wrong">0</div>
+                                <div class="label">À revoir</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="value" id="probleme-streak">0</div>
+                                <div class="label">Série en cours</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-title">
+            <h3>📞 Contactez-Nous</h3>
+            <p>Notre équipe d'ingénieurs est disponible 7j/7</p>
+        </div>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-card">
+                    <div class="icon">📧</div>
+                    <h5>Email</h5>
+                    <p>contact@jonasbrowser.com</p>
+                </div>
+                <div class="contact-card">
+                    <div class="icon">📱</div>
+                    <h5>Téléphone</h5>
+                    <p>+33 1 23 45 67 89</p>
+                </div>
+                <div class="contact-card">
+                    <div class="icon">📍</div>
+                    <h5>Adresse</h5>
+                    <p>Paris, France</p>
+                </div>
+            </div>
+            <form class="contact-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Votre nom</label>
+                    <input type="text" id="name" required placeholder="Entrez votre nom">
+                </div>
+                <div class="form-group">
+                    <label for="email">Votre email</label>
+                    <input type="email" id="email" required placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="message">Votre message</label>
+                    <textarea id="message" required placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">🚀 Envoyer le message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-placeholder">JB</div>
+                <div class="footer-text">
+                    <h4>Sarl Jonas Browser</h4>
+                    <p>High-Tech Solutions</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="#accueil">Accueil</a>
+                <a href="#fonctionnalites">Fonctionnalités</a>
+                <a href="#exercices">Exercices</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+        <div class="footer-copy">
+            <p>© 2025 Sarl Jonas Browser High-Tech. Tous droits réservés. | Robot JQ - Assistant Éducatif Intelligent</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Navigation
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.exercise-panel');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(`${tabId}-panel`).classList.add('active');
+            });
+        });
+
+        // Score tracking
+        const scores = {
+            addition: { correct: 0, wrong: 0, streak: 0 },
+            soustraction: { correct: 0, wrong: 0, streak: 0 },
+            multiplication: { correct: 0, wrong: 0, streak: 0 },
+            probleme: { correct: 0, wrong: 0, streak: 0 }
+        };
+
+        // Problem generators
+        const problems = {
+            addition: () => {
+                const a = Math.floor(Math.random() * 50) + 10;
+                const b = Math.floor(Math.random() * 50) + 1;
+                return { display: `${a} + ${b} = ?`, answer: a + b };
+            },
+            soustraction: () => {
+                const a = Math.floor(Math.random() * 50) + 20;
+                const b = Math.floor(Math.random() * 20) + 1;
+                return { display: `${a} - ${b} = ?`, answer: a - b };
+            },
+            multiplication: () => {
+                const a = Math.floor(Math.random() * 10) + 1;
+                const b = Math.floor(Math.random() * 10) + 1;
+                return { display: `${a} × ${b} = ?`, answer: a * b };
+            },
+            probleme: () => {
+                const problemTypes = [
+                    () => {
+                        const total = Math.floor(Math.random() * 30) + 10;
+                        const given = Math.floor(Math.random() * (total - 5)) + 1;
+                        return {
+                            text: `🍎 Marie a <strong style="color: var(--primary-cyan);">${total} pommes</strong>. Elle en donne <strong style="color: var(--primary-magenta);">${given}</strong> à son ami. Combien de pommes lui reste-t-il ?`,
+                            display: `${total} - ${given} = ?`,
+                            answer: total - given
+                        };
+                    },
+                    () => {
+                        const boxes = Math.floor(Math.random() * 8) + 2;
+                        const perBox = Math.floor(Math.random() * 10) + 2;
+                        return {
+                            text: `📦 Lucas a <strong style="color: var(--primary-cyan);">${boxes} boîtes</strong>. Chaque boîte contient <strong style="color: var(--primary-magenta);">${perBox} bonbons</strong>. Combien de bonbons a-t-il en tout ?`,
+                            display: `${boxes} × ${perBox} = ?`,
+                            answer: boxes * perBox
+                        };
+                    },
+                    () => {
+                        const had = Math.floor(Math.random() * 30) + 10;
+                        const received = Math.floor(Math.random() * 20) + 5;
+                        return {
+                            text: `🎈 Emma avait <strong style="color: var(--primary-cyan);">${had} ballons</strong>. Son papa lui en donne <strong style="color: var(--primary-magenta);">${received} de plus</strong>. Combien de ballons a-t-elle maintenant ?`,
+                            display: `${had} + ${received} = ?`,
+                            answer: had + received
+                        };
+                    }
+                ];
+                return problemTypes[Math.floor(Math.random() * problemTypes.length)]();
+            }
+        };
+
+        let currentAnswers = {
+            addition: 20,
+            soustraction: 18,
+            multiplication: 42,
+            probleme: 9
+        };
+
+        function checkAnswer(type, expectedAnswer) {
+            const input = document.getElementById(`${type}-answer`);
+            const feedback = document.getElementById(`${type}-feedback`);
+            const userAnswer = parseInt(input.value);
+            const correctAnswer = currentAnswers[type];
+
+            if (isNaN(userAnswer)) {
+                feedback.textContent = "🤔 Entre un nombre s'il te plaît !";
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                scores[type].correct++;
+                scores[type].streak++;
+                feedback.textContent = getSuccessMessage(scores[type].streak);
+                feedback.className = 'feedback correct';
+                
+                // Generate new problem after delay
+                setTimeout(() => generateNewProblem(type), 1500);
+            } else {
+                scores[type].wrong++;
+                scores[type].streak = 0;
+                feedback.textContent = `❌ Pas tout à fait ! La réponse était ${correctAnswer}. Essaie encore !`;
+                feedback.className = 'feedback incorrect';
+                
+                setTimeout(() => generateNewProblem(type), 2500);
+            }
+
+            feedback.style.display = 'block';
+            updateScoreDisplay(type);
+            input.value = '';
+        }
+
+        function getSuccessMessage(streak) {
+            const messages = [
+                "🎉 Bravo, c'est correct !",
+                "⭐ Super, continue comme ça !",
+                "🚀 Excellent travail !",
+                "🏆 Tu es un champion !",
+                "✨ Incroyable, tu assures !",
+                "🌟 Waouh, tu es trop fort(e) !"
+            ];
+            if (streak >= 5) return `🔥 ${streak} bonnes réponses d'affilée ! Tu es en feu !`;
+            if (streak >= 3) return `💪 ${streak} de suite ! Continue !`;
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function generateNewProblem(type) {
+            const problem = problems[type]();
+            document.getElementById(`${type}-problem`).textContent = problem.display;
+            currentAnswers[type] = problem.answer;
+            
+            if (type === 'probleme' && problem.text) {
+                const panel = document.getElementById('probleme-panel');
+                const textP = panel.querySelector('p');
+                textP.innerHTML = problem.text;
+            }
+            
+            document.getElementById(`${type}-feedback`).style.display = 'none';
+        }
+
+        function updateScoreDisplay(type) {
+            document.getElementById(`${type}-correct`).textContent = scores[type].correct;
+            document.getElementById(`${type}-wrong`).textContent = scores[type].wrong;
+            document.getElementById(`${type}-streak`).textContent = scores[type].streak;
+        }
+
+        // Enter key support
+        document.querySelectorAll('.answer-input input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const type = input.id.replace('-answer', '');
+                    checkAnswer(type, currentAnswers[type]);
+                }
+            });
+        });
+
+        // Form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('✅ Message envoyé avec succès ! Nous vous répondrons rapidement.');
+            e.target.reset();
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Initialize first problems
+        window.addEventListener('load', () => {
+            generateNewProblem('addition');
+            generateNewProblem('soustraction');
+            generateNewProblem('multiplication');
+            generateNewProblem('probleme');
+        });
+    </script>
+</body>
+</html>
